@@ -4,7 +4,7 @@ import requests
 from utils.random_utils import get_random
 
 
-RANDOM_NUMBER = 42.0
+RANDOM_NUMBER = 0.42
 NUM_MEALS = 100
 
 @pytest.fixture
