@@ -1,3 +1,13 @@
+
+@pytest.fixture
+def sample_meal():
+    return Meal(1, "Spaghetti", "Italian", 12.5, "MED")
+
+@pytest.fixture
+def mock_db_connection(mocker):
+    """Mock the get_db_connection function to avoid real database calls."""
+    return mocker.patch("meal_max.utils.sql_utils.get_db_connection")
+
 #def create_meal
 #def clear_meals
 #def delete_meal
