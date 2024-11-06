@@ -4,7 +4,7 @@ import requests
 from utils.random_utils import get_random
 
 
-RANDOM_NUMBER = 42
+RANDOM_NUMBER = 42.0
 NUM_MEALS = 100
 
 @pytest.fixture
@@ -51,4 +51,4 @@ def test_get_random_invalid_response(mock_random_org):
         get_random(NUM_MEALS)
 
 
-#ask if there anything to change except url
+#ask if there anything to change except url and 42.0
