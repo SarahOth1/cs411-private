@@ -1,105 +1,208 @@
 import logging
 from typing import List
 
+
 from meal_max.models.kitchen_model import Meal, update_meal_stats
 from meal_max.utils.logger import configure_logger
 from meal_max.utils.random_utils import get_random
+
+
 
 
 logger = logging.getLogger(__name__)
 configure_logger(logger)
 
 
+
+
 class BattleModel:
+   """
+  
+   A class to manage list om meals (combatants) in the battle
+  
+   Attributes:
+   combatants: A list of meals
+  
+   """
 
-    def __init__(self):
-        self.combatants: List[Meal] = []
 
-    def battle(self) -> str:
-        logger.info("Two meals enter, one meal leaves!")
+   def __init__(self):
+       """
+       Initializes the BattleModel with an empty list of meals.
+       """
+       self.combatants: List[Meal] = []
 
-        if len(self.combatants) < 2:
-            logger.error("Not enough combatants to start a battle.")
-            raise ValueError("Two combatants must be prepped for a battle.")
 
-        combatant_1 = self.combatants[0]
-        combatant_2 = self.combatants[1]
 
-        # Log the start of the battle
-        logger.info("Battle started between %s and %s", combatant_1.meal, combatant_2.meal)
 
-        # Get battle scores for both combatants
-        score_1 = self.get_battle_score(combatant_1)
-        score_2 = self.get_battle_score(combatant_2)
+   #####################
+   # Battle Management Functions
+   #####################
 
-        # Log the scores for both combatants
-        logger.info("Score for %s: %.3f", combatant_1.meal, score_1)
-        logger.info("Score for %s: %.3f", combatant_2.meal, score_2)
 
-        # Compute the delta and normalize between 0 and 1
-        delta = abs(score_1 - score_2) / 100
+   def battle(self) -> str:
+       """
+       Determines the winner meal between the first two combatants in the list (based on their battle scores) and removes the loser from it.
+      
+       Args:
+           none
 
-        # Log the delta and normalized delta
-        logger.info("Delta between scores: %.3f", delta)
 
-        # Get random number from random.org
-        random_number = get_random()
+       Raises:
+           ValueError: If there are less than 2 meals in our combatants list.
+       """
+       logger.info("Two meals enter, one meal leaves!")
 
-        # Log the random number
-        logger.info("Random number from random.org: %.3f", random_number)
 
-        # Determine the winner based on the normalized delta
-        if delta > random_number:
-            winner = combatant_1
-            loser = combatant_2
-        else:
-            winner = combatant_2
-            loser = combatant_1
+       if len(self.combatants) < 2:
+           logger.error("Not enough combatants to start a battle.")
+           raise ValueError("Two combatants must be prepped for a battle.")
 
-        # Log the winner
-        logger.info("The winner is: %s", winner.meal)
 
-        # Update stats for both combatants
-        update_meal_stats(winner.id, 'win')
-        update_meal_stats(loser.id, 'loss')
+       combatant_1 = self.combatants[0]
+       combatant_2 = self.combatants[1]
 
-        # Remove the losing combatant from combatants
-        self.combatants.remove(loser)
 
-        return winner.meal
+       # Log the start of the battle
+       logger.info("Battle started between %s and %s", combatant_1.meal, combatant_2.meal)
 
-    def clear_combatants(self):
-        logger.info("Clearing the combatants list.")
-        self.combatants.clear()
 
-    def get_battle_score(self, combatant: Meal) -> float:
-        difficulty_modifier = {"HIGH": 1, "MED": 2, "LOW": 3}
+       # Get battle scores for both combatants
+       score_1 = self.get_battle_score(combatant_1)
+       score_2 = self.get_battle_score(combatant_2)
 
-        # Log the calculation process
-        logger.info("Calculating battle score for %s: price=%.3f, cuisine=%s, difficulty=%s",
-                    combatant.meal, combatant.price, combatant.cuisine, combatant.difficulty)
 
-        # Calculate score
-        score = (combatant.price * len(combatant.cuisine)) - difficulty_modifier[combatant.difficulty]
+       # Log the scores for both combatants
+       logger.info("Score for %s: %.3f", combatant_1.meal, score_1)
+       logger.info("Score for %s: %.3f", combatant_2.meal, score_2)
 
-        # Log the calculated score
-        logger.info("Battle score for %s: %.3f", combatant.meal, score)
 
-        return score
+       # Compute the delta and normalize between 0 and 1
+       delta = abs(score_1 - score_2) / 100
 
-    def get_combatants(self) -> List[Meal]:
-        logger.info("Retrieving current list of combatants.")
-        return self.combatants
 
-    def prep_combatant(self, combatant_data: Meal):
-        if len(self.combatants) >= 2:
-            logger.error("Attempted to add combatant '%s' but combatants list is full", combatant_data.meal)
-            raise ValueError("Combatant list is full, cannot add more combatants.")
+       # Log the delta and normalized delta
+       logger.info("Delta between scores: %.3f", delta)
 
-        # Log the addition of the combatant
-        logger.info("Adding combatant '%s' to combatants list", combatant_data.meal)
 
-        self.combatants.append(combatant_data)
+       # Get random number from random.org
+       random_number = get_random()
 
-        # Log the current state of combatants
-        logger.info("Current combatants list: %s", [combatant.meal for combatant in self.combatants])
+
+       # Log the random number
+       logger.info("Random number from random.org: %.3f", random_number)
+
+
+       # Determine the winner based on the normalized delta
+       if delta > random_number:
+           winner = combatant_1
+           loser = combatant_2
+       else:
+           winner = combatant_2
+           loser = combatant_1
+
+
+       # Log the winner
+       logger.info("The winner is: %s", winner.meal)
+
+
+       # Update stats for both combatants
+       update_meal_stats(winner.id, 'win')
+       update_meal_stats(loser.id, 'loss')
+
+
+       # Remove the losing combatant from combatants
+       self.combatants.remove(loser)
+
+
+       return winner.meal
+
+
+   def clear_combatants(self):
+       """
+       Clears (removes all) combatants from the list.
+
+
+       Args:
+           none
+      
+       Raises:
+           none
+       """
+       logger.info("Clearing the combatants list.")
+       self.combatants.clear()
+
+
+   def get_battle_score(self, combatant: Meal) -> float:
+       """
+       Computes and returns the score of the specified combatant based on factors including the meal's price and other factors.
+
+
+       Args:
+           combatant (Meal) : The combatant that its score will be returned
+
+
+       Raises:
+           none
+
+
+       """
+       difficulty_modifier = {"HIGH": 1, "MED": 2, "LOW": 3}
+
+
+       # Log the calculation process
+       logger.info("Calculating battle score for %s: price=%.3f, cuisine=%s, difficulty=%s",
+                   combatant.meal, combatant.price, combatant.cuisine, combatant.difficulty)
+
+
+       # Calculate score
+       score = (combatant.price * len(combatant.cuisine)) - difficulty_modifier[combatant.difficulty]
+
+
+       # Log the calculated score
+       logger.info("Battle score for %s: %.3f", combatant.meal, score)
+
+
+       return score
+
+
+   def get_combatants(self) -> List[Meal]:
+       """
+       Returns the list of combatants saved as the Battle Model's attribute.
+
+
+       Args:
+           none
+
+
+       Raises:
+           none
+       """
+       logger.info("Retrieving current list of combatants.")
+       return self.combatants
+
+
+   def prep_combatant(self, combatant_data: Meal):
+       """
+       Adds the given combatant in the argument to the combatants list.
+      
+       Args:
+           combatant_data (Meal):
+       Raises:
+           ValueError: If the combatants list is full and the combatant can't be added.
+       """
+       if len(self.combatants) >= 2:
+           logger.error("Attempted to add combatant '%s' but combatants list is full", combatant_data.meal)
+           raise ValueError("Combatant list is full, cannot add more combatants.")
+
+
+       # Log the addition of the combatant
+       logger.info("Adding combatant '%s' to combatants list", combatant_data.meal)
+
+
+       self.combatants.append(combatant_data)
+
+
+       # Log the current state of combatants
+       logger.info("Current combatants list: %s", [combatant.meal for combatant in self.combatants])
+
