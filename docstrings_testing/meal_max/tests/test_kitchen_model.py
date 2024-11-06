@@ -1,3 +1,7 @@
+import pytest
+import sqlite3
+from meal_max.models import kitchen_model
+from meal_max.models.kitchen_model import Meal
 
 @pytest.fixture
 def sample_meal():
