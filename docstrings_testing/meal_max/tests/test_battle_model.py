@@ -79,5 +79,5 @@ def test_prep_combatant_error(battle_model, sample_meal1, sample_meal2):
 def test_get_battle_score(battle_model, sample_meal1):
     """Test getting the battle score."""
     difficulty_modifier = {"HIGH": 1, "MED": 2, "LOW": 3}
-    score = battle_model.get_battle_score(battle_model, sample_meal1)
+    score = battle_model.get_battle_score(sample_meal1)
     assert score == (sample_meal1.price * len(sample_meal1.cuisine)) - difficulty_modifier[sample_meal1.difficulty]
