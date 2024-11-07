@@ -1,7 +1,7 @@
 import pytest
 
-from models.battle_model import BattleModel
-from models.kitchen_model import Meal
+from meal_max.models.battle_model import BattleModel
+from meal_max.models.kitchen_model import Meal
 
 @pytest.fixture()
 def battle_model():
