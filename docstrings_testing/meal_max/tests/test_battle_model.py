@@ -52,7 +52,7 @@ def test_clear_combatants(battle_model, sample_meal1):
     """Test clearing the entire combatants list."""
     battle_model.prep_combatant(sample_meal1)
     battle_model.clear_combatants()
-    assert len(battle_model.ombatants) == 0, "Playlist should be empty after clearing"
+    assert len(battle_model.combatants) == 0, "Playlist should be empty after clearing"
 
 def test_get_combatants(battle_model, sample_meal1, sample_meal2):
     """Test successfully retrieving all combatants."""
