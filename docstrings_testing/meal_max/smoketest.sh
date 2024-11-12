@@ -35,24 +35,6 @@ check_db() {
     fi
 }
 
-# Function to check the meal creation
-create_meal() {
-    meal=$1
-    cuisine=$2
-    price=$3
-    difficulty=$4
-
-    echo "Adding meal ($meal, $cuisine, $price, $difficulty)..."
-    curl -s -X POST "$BASE_URL/create-meal" -H "Content-Type: application/json" -d "{\"meal\": \"$meal\", \"cuisine\": \"$cuisine\", \"price\": $price, \"difficulty\": \"$difficulty\"}" | grep -q '"status": "success"'
-
-    if [ $? -eq 0 ]; then
-        echo "Meal added successfully."
-    else
-        echo "Failed to add meal."
-        exit 1
-    fi
-}
-
 
 # Function to check clear meals
 clear_meals() {
@@ -66,18 +48,7 @@ clear_meals() {
     fi
 }
 
-# Function delete meal by id
-delete_meal() {
-    id=$1
-    echo "Deleting meal with id $id..."
-    curl -s -X DELETE "$BASE_URL/delete-meal/$id" | grep -q '"status": "success"'
-    if [ $? -eq 0 ]; then
-        echo "Meal deleted successfully."
-    else
-        echo "Failed to delete meal."
-        exit 1
-    fi
-}
+
 
 # Function to get meal by id
 get_meal_by_id() {
@@ -114,6 +85,45 @@ get_meal_by_name() {
     fi
 }
 
+# Function delete meal by id
+delete_meal() {
+    id=$1
+    echo "Deleting meal with id $id..."
+    curl -s -X DELETE "$BASE_URL/delete-meal/$id" | grep -q '"status": "success"'
+    if [ $? -eq 0 ]; then
+        echo "Meal deleted successfully."
+    else
+        echo "Failed to delete meal."
+        exit 1
+    fi
+}
+
+# Function to check the meal creation
+create_meal() {
+    meal=$1
+    cuisine=$2
+    price=$3
+    difficulty=$4
+
+    echo "Adding meal ($meal, $cuisine, $price, $difficulty)..."
+    curl -s -X POST "$BASE_URL/create-meal" -H "Content-Type: application/json" -d "{\"meal\": \"$meal\", \"cuisine\": \"$cuisine\", \"price\": $price, \"difficulty\": \"$difficulty\"}" | grep -q '"status": "success"'
+
+    if [ $? -eq 0 ]; then
+        echo "Meal added successfully."
+    else
+        echo "Failed to add meal."
+        exit 1
+    fi
+}
+
+# Function to prep combatants
+prep_combatant() {
+    name=$1
+    echo "Prepping combatants..."
+    response=$(curl -s -X POST "$BASE_URL/prep-combatant" -H "Content-Type: application/json" -d "{\"meal\": \"$name\"}")
+
+}
+
 # Function to test battle
 test_battle() {
     echo "Testing battle..."
@@ -130,17 +140,6 @@ test_battle() {
     fi
 }
 
-# Function to clear combatants
-clear_combatants() {
-    echo "Clearing combatants..."
-    curl -s -X POST "$BASE_URL/clear-combatants" | grep -q '"status": "success"'
-    if [ $? -eq 0 ]; then
-        echo "Combatants cleared successfully."
-    else
-        echo "Failed to clear combatants."
-        exit 1
-    fi
-}
 
 # Function to get combatants
 get_combatants() {
@@ -158,13 +157,20 @@ get_combatants() {
     fi
 }
 
-# Function to prep combatants
-prep_combatant() {
-    name=$1
-    echo "Prepping combatants..."
-    response=$(curl -s -X POST "$BASE_URL/prep-combatant" -H "Content-Type: application/json" -d "{\"meal\": \"$name\"}")
-
+# Function to clear combatants
+clear_combatants() {
+    echo "Clearing combatants..."
+    curl -s -X POST "$BASE_URL/clear-combatants" | grep -q '"status": "success"'
+    if [ $? -eq 0 ]; then
+        echo "Combatants cleared successfully."
+    else
+        echo "Failed to clear combatants."
+        exit 1
+    fi
 }
+
+
+
 
 # Function to get leaderboard
 get_leaderboard() {
@@ -189,46 +195,34 @@ check_health
 check_db
 
 # Create meals
-create_meal "Burger" "American" 10 "MED"
-create_meal "Pizza" "Italian" 15 "LOW"
-create_meal "Sushi" "Japanese" 20 "HIGH"
-create_meal "Taco" "Mexican" 12 "MED"
-create_meal "Pasta" "Italian" 18 "LOW"
+create_meal "Maglouba" "Saudi" 23 "HIGH"
+create_meal "Quesadilla" "Mexican" 17 "MED"
+create_meal "ChickenOrzo" "Italian" 18 "LOW"
+create_meal "Shawarma" "Saudi" 13 "HIGH"
+create_meal "Carbonara" "Italian" 21 "MED"
 
+delete_meal 4
+delete_meal 1
 
 # Get meals by ID
-get_meal_by_id 1
-get_meal_by_id 2
+get_meal_by_id 3
 get_meal_by_id 4
-
-delete_meal 3
-delete_meal 5
+get_meal_by_id 2
 
 
 clear_meals
 
-create_meal "Burger" "American" 10 "MED"
-create_meal "Pizza" "Italian" 15 "LOW"
-create_meal "Sushi" "Japanese" 20 "HIGH"
-create_meal "Taco" "Mexican" 12 "MED"
+create_meal "Maglouba" "Saudi" 23 "HIGH"
+create_meal "Carbonara" "Italian" 21 "MED"
+create_meal "ChickenOrzo" "Italian" 18 "LOW"
 
-
-get_meal_by_name "Burger"
-get_meal_by_name "Pizza"
-get_meal_by_name "Taco"
+get_meal_by_name "ChickenOrzo"
+get_meal_by_name "Carbonara"
 
 clear_combatants
 
-
-prep_combatant "Burger"
-prep_combatant "Pizza"
-get_combatants
-test_battle
-
-
-clear_combatants
-prep_combatant "Sushi"
-prep_combatant "Taco"
+prep_combatant "Carbonara"
+prep_combatant "ChickenOrzo"
 get_combatants
 test_battle
 
