@@ -78,9 +78,8 @@ def test_prep_combatant_error(battle_model, sample_meal1, sample_meal2):
     """Test failing to add a combatant to the full combatants list."""
     battle_model.prep_combatant(sample_meal1)
     battle_model.prep_combatant(sample_meal2)
-    battle_model.prep_combatant(sample_meal3)
     with pytest.raises(ValueError, match="Combatant list is full, cannot add more combatants."):
-        battle_model.prep_combatant(sample_meal2)
+        battle_model.prep_combatant(sample_meal3)
 
 def test_get_battle_score(battle_model, sample_meal1):
     """Test getting the battle score."""
