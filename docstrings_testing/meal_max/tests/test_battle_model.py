@@ -23,6 +23,11 @@ def sample_meal2():
     return Meal(2, 'Pasta', 'Italian', 20.0, 'LOW')
 
 @pytest.fixture
+def sample_meal3():
+    return Meal(3, 'Anything', 'Saudi', 23.0, 'HIGH')
+
+
+@pytest.fixture
 def sample_battle(sample_meal1, sample_meal2):
     return [sample_meal1, sample_meal2]
 
